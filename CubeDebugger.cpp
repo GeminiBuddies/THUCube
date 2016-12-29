@@ -5,7 +5,6 @@
 using namespace std;
 
 #include "CubeStatus.cpp"
-#include "CubeSolver.cpp"
 
 void printCube(const Cube & cu) {
     printf("   %c%c%c\n", cu[0][0], cu[0][1], cu[0][2]);
