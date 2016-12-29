@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <algorithm>
 
 //UBRFLD
@@ -23,9 +24,22 @@ enum class Face {
 struct PFPos{
     Face face;
     int pos;
-    PFPos(){}
-    PFPos(Face _face,int _pos) : face(_face), pos(_pos) {}
+    PFPos() {}
+    PFPos(Face _face, int _pos) : face(_face), pos(_pos) {}
 };
+
+struct PFPosColor {
+    Face face;
+    int pos;
+    char color;
+
+    PFPosColor() {}
+    PFPosColor(Face _face, int _pos, char _color) : face(_face), pos(_pos), color(_color) {}
+
+    PFPos getPFPos() {
+        return PFPos(face, pos);
+    }
+}
 
 typedef Face Op;
 
@@ -79,6 +93,12 @@ public:
     Cube(char ** F) {
         for (int i = 0; i < 6; ++i) for (int j = 0; j < 9; ++j) f[i][j] = F[i][j];
     }
+
+    PFPos SeekPiece(char domColor, char auxColor);
+    PFPos SeekPiece(char domColor, char auxColor, char terColor);
+
+    pair<PFPosColor, PFPosColor> CornerGetNeighbor(PFPos piece);
+    PFPosColor EdgeGetNeighbor(PFPos piece);
 };
 
 void Cube::rc(int face) {
@@ -109,4 +129,12 @@ PFPos Cube::SeekPiece(char domColor, char auxColor)
 PFPos Cube::SeekPiece(char domColor, char auxColor, char terColor)
 {
 //TODO
+}
+
+pair<PFPosColor, PFPosColor> Cube::CornerGetNeighbor(PFPos piece) {
+
+}
+
+PFPosColor Cube::EdgeGetNeighbor(PFPos piece) {
+
 }
