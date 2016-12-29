@@ -1,7 +1,10 @@
 #pragma once
 
+#include <vector>
 #include "CubeStatus.cpp"
 #include "CubeDebugger.cpp"
+
+using std::vector;
 
 static char colorOfFace[6];
 
