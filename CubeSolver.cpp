@@ -83,8 +83,3 @@ void SolveTop(Cube &status, vector<Op> & OpStack)
 {
 	//TODO
 }
-
-int main()
-{
-
-}
