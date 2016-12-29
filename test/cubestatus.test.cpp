@@ -1,5 +1,5 @@
 
-#include "../cubestatus.cpp"
+#include "../CubeStatus.cpp"
 
 #include <cstdio>
 using namespace std;
