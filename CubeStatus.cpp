@@ -2,7 +2,6 @@
 
 //UBRFLD
 class Cube;
-typedef void (Cube::*func)();
 
 enum class Face {
     U = 0,
@@ -39,13 +38,11 @@ public :
 
     const char* operator [] (const int & b) const;
 
-    func fn[12] = {
-        U, B, R, F, L, D,    
-        Ui, Bi, Ri, Fi, Li, Di
-    };
-
     void Rotate(Face fa) {
-        (this->*fn[(int)fa])();
+    	int _fa = (int)fa;
+    	
+        if (_fa < 6) rc(_fa);
+		else  ri(_fa - 6);
     }
 
 private :
