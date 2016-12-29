@@ -21,9 +21,48 @@ enum class Face {
     Di = 11
 };
 
+
+
 constexpr int innerFaceOrder[8] = {
     0, 1, 2, 5, 8, 7, 6, 3
 };
+
+constexpr int neighborFace[6][12][2] = {
+    {{1, 2}, {1, 1}, {1, 0}, {2, 2}, {2, 1}, {2, 0}, {3, 2}, {3, 1}, {3, 0}, {4, 2}, {4, 1}, {4, 0}},
+    {{0, 2}, {0, 1}, {0, 0}, {4, 0}, {4, 3}, {4, 6}, {5, 6}, {5, 7}, {5, 8}, {2, 8}, {2, 5}, {2, 2}},
+    {{0, 8}, {0, 5}, {0, 2}, {1, 0}, {1, 3}, {1, 6}, {5, 8}, {5, 5}, {5, 2}, {3, 8}, {3, 5}, {3, 2}},
+    {{0, 6}, {0, 7}, {0, 8}, {2, 0}, {2, 3}, {2, 6}, {5, 2}, {5, 1}, {5, 0}, {4, 8}, {4, 5}, {4, 2}},
+    {{0, 0}, {0, 3}, {0, 6}, {3, 0}, {3, 3}, {3, 6}, {5, 0}, {5, 3}, {5, 6}, {1, 8}, {1, 5}, {1, 2}},
+    {{4, 6}, {4, 7}, {4, 8}, {3, 6}, {3, 7}, {3, 8}, {2, 6}, {2, 7}, {2, 8}, {1, 6}, {1, 7}, {1, 8}}
+};
+
+constexpr int x = -1; // an invalid number
+
+constexpr int edgeNeighbor[6][9][2] = {
+    {{x, x}, {1, 1}, {x, x}, {4, 1}, {x, x}, {2, 1}, {x, x}, {3, 1}, {x, x}},
+    {{x, x}, {0, 1}, {x, x}, {2, 5}, {x, x}, {4, 3}, {x, x}, {5, 7}, {x, x}},
+    {{x, x}, {0, 5}, {x, x}, {3, 5}, {x, x}, {1, 3}, {x, x}, {5, 5}, {x, x}},
+    {{x, x}, {0, 7}, {x, x}, {4, 5}, {x, x}, {2, 3}, {x, x}, {5, 1}, {x, x}},
+    {{x, x}, {0, 3}, {x, x}, {1, 5}, {x, x}, {3, 3}, {x, x}, {5, 3}, {x, x}},
+    {{x, x}, {3, 7}, {x, x}, {4, 7}, {x, x}, {2, 7}, {x, x}, {1, 7}, {x, x}}
+};
+
+#define INVI {{x, x}, {x, x}}
+constexpr int cornerNeighbor[6][9][2][2] = {
+    {{{1, 2}, {4, 0}}, INVI, {{2, 2}, {1, 0}}, INVI, INVI, INVI, {{4, 2}, {3, 0}}, INVI, {{3, 2}, {2, 0}}},
+    {{{0, 2}, {2, 2}}, INVI, {{4, 0}, {0, 0}}, INVI, INVI, INVI, {{2, 8}, {5, 8}}, INVI, {{5, 6}, {4, 6}}},
+    {{{0, 8}, {3, 2}}, INVI, {{1, 0}, {0, 2}}, INVI, INVI, INVI, {{3, 8}, {5, 2}}, INVI, {{5, 8}, {1, 6}}},
+    {{{0, 6}, {4, 2}}, INVI, {{2, 0}, {0, 8}}, INVI, INVI, INVI, {{4, 8}, {5, 0}}, INVI, {{5, 2}, {2, 6}}},
+    {{{0, 0}, {1, 2}}, INVI, {{3, 0}, {0, 6}}, INVI, INVI, INVI, {{1, 8}, {5, 6}}, INVI, {{5, 0}, {3, 6}}},
+    {{{3, 6}, {4, 8}}, INVI, {{2, 6}, {3, 8}}, INVI, INVI, INVI, {{4, 6}, {1, 8}}, INVI, {{1, 6}, {2, 8}}}
+};
+
+constexpr int ecCnt = 4;
+
+constexpr int edgeIndex[] = { 1, 3, 5, 7 };
+constexpr int cornerIndex[] = { 0, 2, 6, 8 };
+
+
 
 struct PFPos{
     Face face;
@@ -79,41 +118,6 @@ private:
 
     face f[6];
 
-    static constexpr int neighborFace[6][12][2] = {
-        {{1, 2}, {1, 1}, {1, 0}, {2, 2}, {2, 1}, {2, 0}, {3, 2}, {3, 1}, {3, 0}, {4, 2}, {4, 1}, {4, 0}},
-        {{0, 2}, {0, 1}, {0, 0}, {4, 0}, {4, 3}, {4, 6}, {5, 6}, {5, 7}, {5, 8}, {2, 8}, {2, 5}, {2, 2}},
-        {{0, 8}, {0, 5}, {0, 2}, {1, 0}, {1, 3}, {1, 6}, {5, 8}, {5, 5}, {5, 2}, {3, 8}, {3, 5}, {3, 2}},
-        {{0, 6}, {0, 7}, {0, 8}, {2, 0}, {2, 3}, {2, 6}, {5, 2}, {5, 1}, {5, 0}, {4, 8}, {4, 5}, {4, 2}},
-        {{0, 0}, {0, 3}, {0, 6}, {3, 0}, {3, 3}, {3, 6}, {5, 0}, {5, 3}, {5, 6}, {1, 8}, {1, 5}, {1, 2}},
-        {{4, 6}, {4, 7}, {4, 8}, {3, 6}, {3, 7}, {3, 8}, {2, 6}, {2, 7}, {2, 8}, {1, 6}, {1, 7}, {1, 8}}
-    };
-
-    static constexpr int x = -1; // an invalid number
-
-    static constexpr int edgeNeighbor[6][9][2] = {
-        {{x, x}, {1, 1}, {x, x}, {4, 1}, {x, x}, {2, 1}, {x, x}, {3, 1}, {x, x}},
-        {{x, x}, {0, 1}, {x, x}, {2, 5}, {x, x}, {4, 3}, {x, x}, {5, 7}, {x, x}},
-        {{x, x}, {0, 5}, {x, x}, {3, 5}, {x, x}, {1, 3}, {x, x}, {5, 5}, {x, x}},
-        {{x, x}, {0, 7}, {x, x}, {4, 5}, {x, x}, {2, 3}, {x, x}, {5, 1}, {x, x}},
-        {{x, x}, {0, 3}, {x, x}, {1, 5}, {x, x}, {3, 3}, {x, x}, {5, 3}, {x, x}},
-        {{x, x}, {3, 7}, {x, x}, {4, 7}, {x, x}, {2, 7}, {x, x}, {1, 7}, {x, x}}
-    };
-
-    #define INVI {{x, x}, {x, x}}
-    static constexpr int cornerNeighbor[6][9][2][2] = {
-        {{{1, 2}, {4, 0}}, INVI, {{2, 2}, {1, 0}}, INVI, INVI, INVI, {{4, 2}, {3, 0}}, INVI, {{3, 2}, {2, 0}}},
-        {{{0, 2}, {2, 2}}, INVI, {{4, 0}, {0, 0}}, INVI, INVI, INVI, {{2, 8}, {5, 8}}, INVI, {{5, 6}, {4, 6}}},
-        {{{0, 8}, {3, 2}}, INVI, {{1, 0}, {0, 2}}, INVI, INVI, INVI, {{3, 8}, {5, 2}}, INVI, {{5, 8}, {1, 6}}},
-        {{{0, 6}, {4, 2}}, INVI, {{2, 0}, {0, 8}}, INVI, INVI, INVI, {{4, 8}, {5, 0}}, INVI, {{5, 2}, {2, 6}}},
-        {{{0, 0}, {1, 2}}, INVI, {{3, 0}, {0, 6}}, INVI, INVI, INVI, {{1, 8}, {5, 6}}, INVI, {{5, 0}, {3, 6}}},
-        {{{3, 6}, {4, 8}}, INVI, {{2, 6}, {3, 8}}, INVI, INVI, INVI, {{4, 6}, {1, 8}}, INVI, {{1, 6}, {2, 8}}}
-    };
-
-    static constexpr int ecCnt = 4;
-
-    static constexpr int edgeIndex[] = { 1, 3, 5, 7 };
-    static constexpr int cornerIndex[] = { 0, 2, 6, 8 };
-
 public:
     Cube() {;}
     Cube(char ** F) {
@@ -123,7 +127,7 @@ public:
     PFPos SeekPiece(char domColor, char auxColor);
     PFPos SeekPiece(char domColor, char auxColor, char terColor);
 
-    pair<PFPosColor, PFPosColor> CornerGetNeighbor(PFPos piece);
+    std::pair<PFPosColor, PFPosColor> CornerGetNeighbor(PFPos piece);
     PFPosColor EdgeGetNeighbor(PFPos piece);
 };
 
@@ -176,7 +180,7 @@ PFPos Cube::SeekPiece(char domColor, char auxColor, char terColor)
     }
 }
 
-pair<PFPosColor, PFPosColor> Cube::CornerGetNeighbor(PFPos piece) {
+std::pair<PFPosColor, PFPosColor> Cube::CornerGetNeighbor(PFPos piece) {
     int i = (int)piece.face, j = piece.pos;
 
     int si = cornerNeighbor[i][j][0][0], sj = cornerNeighbor[i][j][0][1];
