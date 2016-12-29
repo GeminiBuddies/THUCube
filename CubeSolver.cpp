@@ -33,7 +33,6 @@ void SolveTop(Cube &status, vector<Op> & OpStack)
 	// step1.1: Edge pieces
 	for(int i=1;i<=4;i++){
 		PFPos ppos=status.SeekPiece(colorOfFace[int(Face::D)],colorOfFace[i]);
-		
 	}
 
 	// step1.2: Cornor pieces
