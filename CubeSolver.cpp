@@ -31,9 +31,9 @@ vector<Op> Solve(Cube *_status)
 	return OpStack;
 }
 
-#define ROTATE(OP) (OpStack.push_back(OP),status.push_back(OP))
+#define ROTATE(OP) (OpStack.push_back(OP),status.Rotate(OP))
 
-inline Op inv(Op a){return int(a)>=6 ? a-6 : a+6;}
+inline Op inv(Op a){return Op(int(a)>=6 ? int(a)-6 : int(a)+6);}
 
 void SolveBottom(Cube &status, vector<Op> & OpStack)
 {
@@ -82,4 +82,9 @@ void SolveMiddle(Cube &status, vector<Op> & OpStack)
 void SolveTop(Cube &status, vector<Op> & OpStack)
 {
 	//TODO
+}
+
+int main()
+{
+
 }
