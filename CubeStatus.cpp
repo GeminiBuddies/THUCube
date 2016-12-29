@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 
 //UBRFLD
@@ -17,6 +19,8 @@ enum class Face {
     Li = 10,
     Di = 11
 };
+
+typedef Face Op;
 
 class Cube {
     void rc(int face);
@@ -40,7 +44,7 @@ public :
 
     void Rotate(Face fa) {
     	int _fa = (int)fa;
-    	
+
         if (_fa < 6) rc(_fa);
 		else  ri(_fa - 6);
     }
@@ -78,7 +82,7 @@ void Cube::rc(int face) {
 
 void Cube::ri(int face) {
     int (*nF)[2] = neighborFace[face];
-    
+
     for (int i = 0; i < 3; ++i) for (int j = 1; j < 12; ++j) std::swap(f[nF[j][0]][nF[j][1]], f[nF[j - 1][0]][nF[j - 1][1]]);
     for (int i = 0; i < 2; ++i) for (int j = 1; j < 8; ++j) std::swap(f[face][innerFaceOrder[j]], f[face][innerFaceOrder[j - 1]]);
 }
