@@ -20,13 +20,20 @@ enum class Face {
     Di = 11
 };
 
+struct PFPos{
+    Face face;
+    int pos;
+    PFPos(){}
+    PFPos(Face _face,int _pos) : face(_face), pos(_pos) {}
+};
+
 typedef Face Op;
 
 class Cube {
     void rc(int face);
     void ri(int face);
 
-public :
+public:
     void U() { rc(0); }
     void B() { rc(1); }
     void R() { rc(2); }
@@ -49,7 +56,7 @@ public :
 		else  ri(_fa - 6);
     }
 
-private :
+private:
     typedef char face[9];
 
     face f[6];
@@ -66,7 +73,8 @@ private :
     int innerFaceOrder[8] = {
         0, 1, 2, 5, 8, 7, 6, 3
     };
-public :
+
+public:
     Cube() {;}
     Cube(char ** F) {
         for (int i = 0; i < 6; ++i) for (int j = 0; j < 9; ++j) f[i][j] = F[i][j];
@@ -89,4 +97,16 @@ void Cube::ri(int face) {
 
 const char* Cube::operator [] (const int & b) const {
     return (const char*)f[b];
+}
+
+//Seeking for an edge piece
+PFPos Cube::SeekPiece(char domColor, char auxColor)
+{
+//TODO: position[]
+}
+
+//Seeking for a cornor piece
+PFPos Cube::SeekPiece(char domColor, char auxColor, char terColor)
+{
+//TODO
 }
