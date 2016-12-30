@@ -1,10 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <utility>
 #include "CubeStatus.cpp"
 #include "CubeDebugger.cpp"
 
 using std::vector;
+using std::pair;
 
 static char colorOfFace[6];
 
@@ -38,6 +40,18 @@ vector<Op> Solve(Cube *_status)
 #endif
 
 inline Op inv(Op a){return Op(int(a)>=6 ? int(a)-6 : int(a)+6);}
+inline bool Any(PFPos &a, PFPos b, PFPos c, Face target){
+	return a.face==target ? true
+							: b.face==target ? a=b,true
+											: c.face==target ? a=c,true
+															: false;
+}
+inline int UDoppo(int pos){
+	if(pos==2) return 8;
+	if(pos==8) return 2;
+	if(pos==0) return 6;
+	if(pos==6) return 0;
+}
 
 void SolveBottom(Cube &status, vector<Op> & OpStack)
 {
@@ -46,6 +60,7 @@ void SolveBottom(Cube &status, vector<Op> & OpStack)
 		PFPos ppos=status.SeekPiece(colorOfFace[int(Face::D)],colorOfFace[i]);
 		PFPosColor neighbor=status.EdgeGetNeighbor(ppos);
 		if(ppos.face==Face::D){
+			if(neighbor.face==Face(i)) continue;
 			ROTATE(neighbor.face);ROTATE(neighbor.face);
 		}
 		else if(ppos.face!=Face::U){
@@ -78,6 +93,39 @@ void SolveBottom(Cube &status, vector<Op> & OpStack)
 
 	// step1.2: Cornor pieces
 
+	for(int i=1;i<=4;i++){
+		int nFace=i%4+1,targetPos;
+		if(i==1) targetPos=8;
+		if(i==2) targetPos=2;
+		if(i==3) targetPos=0;
+		if(i==4) targetPos=6;
+
+		for(;;){
+			PFPos ppos=status.SeekPiece(colorOfFace[int(Face::D)],colorOfFace[i],colorOfFace[nFace]);
+			pair<PFPosColor,PFPosColor> t=status.CornerGetNeighbor(ppos);
+			if(ppos.face==Face::D && t.first.face==Face(i) && t.second.face==Face(nFace)) break;
+			if(Any(ppos,t.first.getPFPos(),t.second.getPFPos(),Face::D)){
+				t=status.CornerGetNeighbor(ppos);
+				if(t.first.pos==6){
+					ROTATE(t.first.face);ROTATE(Face::U);ROTATE(inv(t.first.face));
+				}
+				else{
+					ROTATE(inv(t.first.face));ROTATE(Face::U);ROTATE(t.first.face);
+				}
+				ppos=status.SeekPiece(colorOfFace[int(Face::D)],colorOfFace[i],colorOfFace[nFace]);
+				t=status.CornerGetNeighbor(ppos);
+			}
+			Any(ppos,t.first.getPFPos(),t.second.getPFPos(),Face::U);
+			for(;ppos.pos!=UDoppo(targetPos);){
+				ROTATE(Face::U);
+				ppos=status.SeekPiece(colorOfFace[int(Face::D)],colorOfFace[i],colorOfFace[nFace]);
+				t=status.CornerGetNeighbor(ppos);
+				Any(ppos,t.first.getPFPos(),t.second.getPFPos(),Face::U);
+			}
+
+			ROTATE(Face(i));ROTATE(Face::U);ROTATE(inv(Face(i)));
+		}
+	}
 }
 
 void SolveMiddle(Cube &status, vector<Op> & OpStack)
