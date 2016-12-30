@@ -99,7 +99,7 @@ void SolveBottom(Cube &status, vector<Op> & OpStack)
 		ROTATE(Face(i));ROTATE(Face(i));
 	}
 
-	// step1.2: Cornor pieces
+	// step1.2: Corner pieces
 
 	for(int i=1;i<=4;i++){
 		int nFace=Left(i),targetPos;
@@ -185,7 +185,51 @@ void SolveMiddle(Cube &status, vector<Op> & OpStack)
 	}
 }
 
-void SolveTop(Cube &status, vector<Op> & OpStack)
+void SolveTopCross(Cube &, vector<Op> &);
+void SolveTopCorners(Cube &, vector<Op> &);
+void FixTopCorners(Cube &, vector<Op> &);
+void FixTopCross(Cube &, vector<Op> &);
+
+void SolveTop(Cube &status, vector<Op> &OpStack)
 {
-	//TODO
+	SolveTopCross(status,OpStack);
+	SolveTopCorners(status,OpStack);
+	FixTopCorners(status,OpStack);
+	FixTopCross(status,OpStack);
+}
+
+void SolveTopCross(Cube &status, vector<Op> &OpStack){
+	int cnt=0;
+	for(int i=1;i<8;i+=2) if(status[int(Face::U)][innerFaceOrder[i]]==colorOfFace[int(Face::U)]) cnt++;
+	if(cnt==0){
+		ROTATE(Face::F);ROTATE(Face::U);ROTATE(Face::R);
+		ROTATE(Face::Ui);ROTATE(Face::Ri);ROTATE(Face::Fi);
+		cnt+=2;
+	}
+	if(cnt==2){
+		int i;
+		while(status[int(Face::U)][7]==colorOfFace[int(Face::U)]) ROTATE(Face::U);
+		for(i=1;i<8;i+=2) if(status[int(Face::U)][innerFaceOrder[i]]==colorOfFace[int(Face::U)]) break;
+		if(innerFaceOrder[i]!=1){
+			ROTATE(Face::F);ROTATE(Face::R);ROTATE(Face::U);
+			ROTATE(Face::Ri);ROTATE(Face::Ui);ROTATE(Face::Fi);
+		}
+		else{
+			if(status[int(Face::U)][5]==colorOfFace[int(Face::U)]) ROTATE(Face::Ui);
+			ROTATE(Face::F);ROTATE(Face::U);ROTATE(Face::R);
+			ROTATE(Face::Ui);ROTATE(Face::Ri);ROTATE(Face::Fi);
+		}
+	}
+}
+
+void SolveTopCorners(Cube &status, vector<Op> &OpStack){
+
+}
+
+void FixTopCorners(Cube &status, vector<Op> &OpStack){
+
+}
+
+void FixTopCross(Cube &status, vector<Op> &OpStack){
+
 }
