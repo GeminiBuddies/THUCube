@@ -31,7 +31,11 @@ vector<Op> Solve(Cube *_status)
 	return OpStack;
 }
 
+#ifndef DEBUG
 #define ROTATE(OP) (OpStack.push_back(OP),status.Rotate(OP))
+#else
+#define ROTATE(OP) (OpStack.push_back(OP),status.Rotate(OP),printCube(status),puts(""))
+#endif
 
 inline Op inv(Op a){return Op(int(a)>=6 ? int(a)-6 : int(a)+6);}
 
@@ -49,10 +53,12 @@ void SolveBottom(Cube &status, vector<Op> & OpStack)
 			if(neighbor.face==Face::U){
 				PFPos dumper;
 				for(int j=1;j<8;j+=2) if(status[int(Face::D)][innerFaceOrder[j]] != colorOfFace[int(Face::D)]){
-					dumper=PFPos(Face::D,j);break;
+					dumper=PFPos(Face::D,innerFaceOrder[j]);break;
 				}
 				int cnt=0;
-				while(status.EdgeGetNeighbor(dumper).face!=ppos.face) ROTATE(Face::D),cnt++;
+				char domColor=status[int(Face::D)][dumper.pos];
+				char auxColor=status.EdgeGetNeighbor(dumper).color;
+				while(status.EdgeGetNeighbor(dumper).face!=ppos.face) ROTATE(Face::D),dumper=status.SeekPiece(domColor,auxColor),cnt++;
 				ROTATE(inv(ppos.face));
 				for(;cnt--;ROTATE(inv(Face::D)));
 			}
