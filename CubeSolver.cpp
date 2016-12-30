@@ -46,12 +46,20 @@ inline bool Any(PFPos &a, PFPos b, PFPos c, Face target){
 											: c.face==target ? a=c,true
 															: false;
 }
+inline bool Any(PFPos &a, PFPos b, Face target){
+	return a.face==target ? true
+							: b.face==target ? a=b,true
+											: false;
+}
+
 inline int UDoppo(int pos){
 	if(pos==2) return 8;
 	if(pos==8) return 2;
 	if(pos==0) return 6;
 	if(pos==6) return 0;
 }
+inline int Left(int c){return c%4+1;}
+inline int Right(int c){return (c+2)%4+1;}
 
 void SolveBottom(Cube &status, vector<Op> & OpStack)
 {
@@ -94,7 +102,7 @@ void SolveBottom(Cube &status, vector<Op> & OpStack)
 	// step1.2: Cornor pieces
 
 	for(int i=1;i<=4;i++){
-		int nFace=i%4+1,targetPos;
+		int nFace=Left(i),targetPos;
 		if(i==1) targetPos=8;
 		if(i==2) targetPos=2;
 		if(i==3) targetPos=0;
@@ -130,7 +138,51 @@ void SolveBottom(Cube &status, vector<Op> & OpStack)
 
 void SolveMiddle(Cube &status, vector<Op> & OpStack)
 {
-	//TODO
+	for(int i=1;i<=4;i++){
+		int leftFace=Left(i),rightFace=Right(i);
+		PFPos ppos=status.SeekPiece(colorOfFace[i],colorOfFace[rightFace]);
+		PFPosColor neighbor=status.EdgeGetNeighbor(ppos);
+		if(ppos.face==Face(i) && neighbor.face==Face(rightFace)) continue;
+		if(ppos.face!=Face::U && neighbor.face!=Face::U){
+			Face l=Face(Left(int(ppos.face))),r=Face(Right(int(ppos.face)));
+			if(ppos.pos==5){
+				ROTATE(Face::U);ROTATE(r);
+				ROTATE(Face::Ui);ROTATE(inv(r));
+				ROTATE(Face::Ui);ROTATE(inv(ppos.face));
+				ROTATE(Face::U);ROTATE(ppos.face);
+			}
+			else{
+				ROTATE(Face::Ui);ROTATE(inv(l));
+				ROTATE(Face::U);ROTATE(l);
+				ROTATE(Face::U);ROTATE(ppos.face);
+				ROTATE(Face::Ui);ROTATE(inv(ppos.face));
+			}
+			ppos=status.SeekPiece(colorOfFace[i],colorOfFace[rightFace]);
+			neighbor=status.EdgeGetNeighbor(ppos);
+		}
+		if(ppos.face!=Face::U){
+			for(;ppos.face!=Face(i);){
+				ROTATE(Face::U);
+				ppos=status.SeekPiece(colorOfFace[i],colorOfFace[rightFace]);
+				neighbor=status.EdgeGetNeighbor(ppos);
+			}
+			ROTATE(Face::U);ROTATE(Face(rightFace));
+			ROTATE(Face::Ui);ROTATE(inv(Face(rightFace)));
+			ROTATE(Face::Ui);ROTATE(inv(Face(i)));
+			ROTATE(Face::U);ROTATE(Face(i));
+		}
+		else{
+			for(;neighbor.face!=Face(rightFace);){
+				ROTATE(Face::U);
+				ppos=status.SeekPiece(colorOfFace[i],colorOfFace[rightFace]);
+				neighbor=status.EdgeGetNeighbor(ppos);
+			}
+			ROTATE(Face::Ui);ROTATE(inv(Face(i)));
+			ROTATE(Face::U);ROTATE(Face(i));
+			ROTATE(Face::U);ROTATE(Face(rightFace));
+			ROTATE(Face::Ui);ROTATE(inv(Face(rightFace)));
+		}
+	}
 }
 
 void SolveTop(Cube &status, vector<Op> & OpStack)
