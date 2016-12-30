@@ -4,6 +4,7 @@
 #include <utility>
 #include "CubeStatus.cpp"
 #include "CubeDebugger.cpp"
+#include "CubeOptimizer.cpp"
 
 using std::vector;
 using std::pair;
@@ -16,7 +17,7 @@ void SolveTop(Cube &, vector<Op> &);
 
 vector<Op> Solve(Cube *_status)
 {
-	Cube & status = *_status;
+	Cube status = *_status;
 	vector<Op> OpStack;
 
 	for(int i=0;i<6;i++) colorOfFace[i]=status[i][4];
@@ -30,6 +31,9 @@ vector<Op> Solve(Cube *_status)
 	//step3: Fix the top part
 	SolveTop(status,OpStack);
 
+	//step4: Optimize the operation sequence
+	Optimize(OpStack);
+	
 	return OpStack;
 }
 
@@ -39,7 +43,6 @@ vector<Op> Solve(Cube *_status)
 #define ROTATE(OP) (OpStack.push_back(OP),status.Rotate(OP),printCube(status),puts(""))
 #endif
 
-inline Op inv(Op a){return Op(int(a)>=6 ? int(a)-6 : int(a)+6);}
 inline bool Any(PFPos &a, PFPos b, PFPos c, Face target){
 	return a.face==target ? true
 							: b.face==target ? a=b,true

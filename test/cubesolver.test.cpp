@@ -19,6 +19,8 @@ int main()
     }
     fclose(stderr);
     printCube(t);puts("");
-    Solve(&t);
+    vector<Op> st=Solve(&t);
+    for(auto p : st) t.Rotate(p);
+    printCube(t);
     return 0;
 }

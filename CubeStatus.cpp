@@ -21,7 +21,9 @@ enum class Face {
     Di = 11
 };
 
+typedef Face Op;
 
+inline Op inv(Op a){return Op(int(a)>=6 ? int(a)-6 : int(a)+6);}
 
 constexpr int innerFaceOrder[8] = {
     0, 1, 2, 5, 8, 7, 6, 3
@@ -84,7 +86,6 @@ struct PFPosColor {
     }
 };
 
-typedef Face Op;
 
 class Cube {
     void rc(int face);
@@ -169,7 +170,7 @@ PFPos Cube::SeekPiece(char domColor, char auxColor, char terColor)
     for (int i = 0; i < 6; ++i) {
         for (int _j = 0; _j < ecCnt; ++_j) {
             int j = cornerIndex[_j];
-            
+
             int si = cornerNeighbor[i][j][0][0], sj = cornerNeighbor[i][j][0][1];
             int ti = cornerNeighbor[i][j][1][0], tj = cornerNeighbor[i][j][1][1];
 
