@@ -19,7 +19,7 @@ const char *opName[] = {
 };
 
 void printOp(Op o) {
-    printf("%s ", opName[(int)o]);
+    printf("\n%s \n\n", opName[(int)o]);
 }
 
 char F[6][10];
@@ -36,11 +36,12 @@ int main() {
     Cube status = Cube(Fptr);
     auto solution = Solve(&status);
 
-    int cnt = 0;
+    Cube s = Cube(Fptr);
     for (auto i : solution) {
         printOp(i);
 
-        if (!((++cnt) % 5)) putchar('\n');
+        s.Rotate(i);
+        printCube(s);
     }
 
     return 0;
