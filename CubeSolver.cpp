@@ -60,6 +60,18 @@ inline int UDoppo(int pos){
 }
 inline int Left(int c){return c%4+1;}
 inline int Right(int c){return (c+2)%4+1;}
+inline Face Left(Face c){return Face(int(c)%4+1);}
+inline Face Right(Face c){return Face((int(c)+2)%4+1);}
+inline Face Counter(Face c){
+	switch (c) {
+		case Face::U: return Face::D;
+		case Face::B: return Face::F;
+		case Face::R: return Face::L;
+		case Face::F: return Face::B;
+		case Face::L: return Face::R;
+		case Face::D: return Face::U;
+	}
+}
 
 void SolveBottom(Cube &status, vector<Op> & OpStack)
 {
@@ -241,10 +253,66 @@ void SolveTopCorners(Cube &status, vector<Op> &OpStack){
 	}
 }
 
-void FixTopCorners(Cube &status, vector<Op> &OpStack){
+inline bool TCPCheck(Cube &status,int pos){
+	pair<PFPosColor,PFPosColor> t=status.CornerGetNeighbor(PFPos(Face::U,pos));
+	return colorOfFace[int(t.first.face)]==t.first.color && colorOfFace[int(t.second.face)]==t.second.color;
+}
 
+#define SWAP(c) {\
+	ROTATE(inv(Right(c)));ROTATE(c);ROTATE(inv(Right(c)));\
+	ROTATE(Counter(c));ROTATE(Counter(c));\
+	ROTATE(Right(c));ROTATE(inv(c));ROTATE(inv(Right(c)));\
+	ROTATE(Counter(c));ROTATE(Counter(c));\
+	ROTATE(Right(c));ROTATE(Right(c));\
+	ROTATE(Face::Ui);\
+}
+
+void FixTopCorners(Cube &status, vector<Op> &OpStack){
+	int cnt=0;
+	for(;;){
+		cnt=0;
+		for(int i=0;i<8;i+=2) if(TCPCheck(status,innerFaceOrder[i])) cnt++;
+		if(cnt>=2) break;
+		ROTATE(Face::U);
+	}
+	if(cnt==2){
+		if(TCPCheck(status,0) && TCPCheck(status,8)){
+			SWAP(Face::F);SWAP(Face::R);
+		}
+		else if(TCPCheck(status,2) && TCPCheck(status,6)){
+			SWAP(Face::F);SWAP(Face::L);
+		}
+		for(int i=0;i<8;i+=2) if(TCPCheck(status,innerFaceOrder[i]) && TCPCheck(status,innerFaceOrder[(i+2)%8])){
+			Face cface=Face(((i>>1)^2)+1);
+			SWAP(Face(cface));break;
+		}
+	}
+}
+
+#define __CYC(c,__u){\
+	ROTATE(c);ROTATE(c);ROTATE(__u);ROTATE(Left(c));ROTATE(inv(Right(c)));\
+	ROTATE(c);ROTATE(c);ROTATE(inv(Left(c)));ROTATE(Right(c));ROTATE(__u);\
+	ROTATE(c);ROTATE(c);\
+}
+#define CYC(c)  __CYC(c,Face::U)
+#define CCYC(c) __CYC(c,Face::Ui)
+
+inline bool TEPCheck(Cube &status,int pos){
+	PFPosColor t=status.EdgeGetNeighbor(PFPos(Face::U,pos));
+	return t.color==colorOfFace[int(t.face)];
 }
 
 void FixTopCross(Cube &status, vector<Op> &OpStack){
-
+	int cnt=0;
+	for(int i=1;i<8;i+=2) if(!TEPCheck(status,innerFaceOrder[i])) cnt++;
+	if(!cnt) return;
+	if(cnt==4) CYC(Face::F)
+	int cb;cnt=0;
+	for(int i=1;i<8;i+=2)
+		if(!TEPCheck(status,innerFaceOrder[i])) cnt++;
+		else cb=(i>>1)+1;
+	if(!cnt) return;
+	Face front=Counter(Face(cb));
+	if(status[int(front)][1]==colorOfFace[int(Right(front))]) CCYC(front)
+	else CYC(front)
 }
