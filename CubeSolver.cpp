@@ -223,7 +223,22 @@ void SolveTopCross(Cube &status, vector<Op> &OpStack){
 }
 
 void SolveTopCorners(Cube &status, vector<Op> &OpStack){
-
+	for(;;){
+		int cnt=0;
+		for(int i=0;i<8;i+=2) if(status[int(Face::U)][innerFaceOrder[i]]==colorOfFace[int(Face::U)]) cnt++;
+		if(cnt==4) break;
+		if(cnt==0){
+			for(;status.CornerGetNeighbor(PFPos(Face::U,6)).first.color!=colorOfFace[int(Face::U)];ROTATE(Face::U));
+		}
+		else if(cnt==1){
+			for(;status[int(Face::U)][6]!=colorOfFace[int(Face::U)];ROTATE(Face::U));
+		}
+		else{
+			for(;status.CornerGetNeighbor(PFPos(Face::U,6)).second.color!=colorOfFace[int(Face::U)];ROTATE(Face::U));
+		}
+		ROTATE(Face::R);ROTATE(Face::U);ROTATE(Face::Ri);ROTATE(Face::U);
+		ROTATE(Face::R);ROTATE(Face::U);ROTATE(Face::U);ROTATE(Face::Ri);
+	}
 }
 
 void FixTopCorners(Cube &status, vector<Op> &OpStack){
