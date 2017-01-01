@@ -24,6 +24,23 @@ enum class Face {
 typedef Face Op;
 
 inline Op inv(Op a){return Op(int(a)>=6 ? int(a)-6 : int(a)+6);}
+inline Face Oface(Face a){
+	int ta=int(a);
+	if(ta<6) return a;
+	else return Face(ta-6);
+}
+inline Face Left(Face c){return Face(int(c)%4+1);}
+inline Face Right(Face c){return Face((int(c)+2)%4+1);}
+inline Face Counter(Face c){
+	switch (c) {
+		case Face::U: return Face::D;
+		case Face::B: return Face::F;
+		case Face::R: return Face::L;
+		case Face::F: return Face::B;
+		case Face::L: return Face::R;
+		case Face::D: return Face::U;
+	}
+}
 
 constexpr int innerFaceOrder[8] = {
     0, 1, 2, 5, 8, 7, 6, 3

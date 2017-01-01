@@ -63,18 +63,6 @@ inline int UDoppo(int pos){
 }
 inline int Left(int c){return c%4+1;}
 inline int Right(int c){return (c+2)%4+1;}
-inline Face Left(Face c){return Face(int(c)%4+1);}
-inline Face Right(Face c){return Face((int(c)+2)%4+1);}
-inline Face Counter(Face c){
-	switch (c) {
-		case Face::U: return Face::D;
-		case Face::B: return Face::F;
-		case Face::R: return Face::L;
-		case Face::F: return Face::B;
-		case Face::L: return Face::R;
-		case Face::D: return Face::U;
-	}
-}
 
 void SolveBottom(Cube &status, vector<Op> & OpStack)
 {
