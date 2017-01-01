@@ -1,0 +1,25 @@
+Fi U  F  U  U  
+R  R  U  U  F  
+F  L  L  B  U  
+Bi Ui B  U  U  
+Bi Ui B  U  Bi 
+R  U  U  Ri Ui 
+R  U  U  Ri Ui 
+R  U  Ri F  U  
+Fi L  U  Li Ui 
+L  U  Li Ui Ui 
+Ri U  R  U  B  
+Ui Bi U  U  R  
+Ui Ri Ui Fi U  
+F  Ui Ui Li U  
+L  U  F  Ui R  
+U  Ri Ui Fi U  
+R  U  Ri U  R  
+U  U  Ri U  U  
+R  U  Ri U  R  
+U  U  Ri U  Bi 
+R  Bi L  L  B  
+Ri Bi L  L  B  
+B  Ui L  L  Ui 
+B  Fi L  L  Bi 
+F  Ui L  L  

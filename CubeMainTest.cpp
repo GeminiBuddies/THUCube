@@ -3,6 +3,12 @@
 #include <cstdio>
 using namespace std;
 
+namespace xxx {
+
+HANDLE h;
+WORD wOldColorAttrs;  
+CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
+
 const char *opName[] = {
     "U ",
     "B ",
@@ -18,14 +24,39 @@ const char *opName[] = {
     "Di"
 };
 
+WORD color[] = {
+	FOREGROUND_RED,
+	FOREGROUND_GREEN,
+	FOREGROUND_BLUE,
+	FOREGROUND_RED | FOREGROUND_GREEN,
+	FOREGROUND_RED | FOREGROUND_BLUE,
+	FOREGROUND_BLUE | FOREGROUND_GREEN,
+	BACKGROUND_RED,
+	BACKGROUND_GREEN,
+	BACKGROUND_BLUE,
+	BACKGROUND_RED | BACKGROUND_GREEN,
+	BACKGROUND_RED | BACKGROUND_BLUE,
+	BACKGROUND_BLUE | BACKGROUND_GREEN,
+};
+
 void printOp(Op o) {
-    printf("\n%s \n\n", opName[(int)o]);
+	SetConsoleTextAttribute(h, color[(int)o]);  
+    printf("\n%s\n\n", opName[(int)o]);
+    SetConsoleTextAttribute(h, wOldColorAttrs);
 }
+
+}
+
+using xxx::printOp;
 
 char F[6][10];
 char *Fptr[] = { F[0], F[1], F[2], F[3], F[4], F[5] };
 
 int main() {
+	xxx::h = GetStdHandle(STD_OUTPUT_HANDLE);  
+    GetConsoleScreenBufferInfo(xxx::h, &xxx::csbiInfo);  
+    xxx::wOldColorAttrs = xxx::csbiInfo.wAttributes;  
+	
     scanf("%s", F[(int)Face::F]);
     scanf("%s", F[(int)Face::B]);
     scanf("%s", F[(int)Face::R]);
@@ -41,7 +72,7 @@ int main() {
         printOp(i);
 
         s.Rotate(i);
-        printCube(s);
+        cPrintCube(s);
     }
 
     return 0;
