@@ -11,12 +11,12 @@ WORD wOldColorAttrs;
 CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
 
 const char *opName[] = {
-    "U ",
-    "B ",
-    "R ",
-    "F ",
-    "L ",
-    "D ",
+    "U",
+    "B",
+    "R",
+    "F",
+    "L",
+    "D",
     "Ui",
     "Bi",
     "Ri",
@@ -78,7 +78,7 @@ int main() {
     for (auto i : solution) {
         printOp(i);
 
-        if (!((++cnt) % 5)) putchar('\n');
+        //if (!((++cnt) % 5)) putchar('\n');
     }
 
     return 0;

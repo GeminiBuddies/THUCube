@@ -40,9 +40,12 @@ WORD color[] = {
 };
 
 void printOp(Op o) {
+	putchar('\n');
 	SetConsoleTextAttribute(h, color[(int)o]);  
-    printf("\n%s\n\n", opName[(int)o]);
+    printf("%s", opName[(int)o]);
     SetConsoleTextAttribute(h, wOldColorAttrs);
+	putchar('\n');
+	putchar('\n');
 }
 
 }
