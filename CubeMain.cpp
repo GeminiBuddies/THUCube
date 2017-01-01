@@ -4,6 +4,8 @@
 #include <cstdio>
 using namespace std;
 
+namespace CO {
+
 HANDLE h;
 WORD wOldColorAttrs;  
 CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
@@ -45,13 +47,22 @@ void printOp(Op o) {
     putchar(' '); 
 }
 
+void initCO() {
+	h = GetStdHandle(STD_OUTPUT_HANDLE);  
+    GetConsoleScreenBufferInfo(h, &csbiInfo);  
+    wOldColorAttrs = csbiInfo.wAttributes;  
+}
+
+}
+
+using CO::printOp;
+using CO::initCO;
+
 char F[6][10];
 char *Fptr[] = { F[0], F[1], F[2], F[3], F[4], F[5] };
 
 int main() {
-	h = GetStdHandle(STD_OUTPUT_HANDLE);  
-    GetConsoleScreenBufferInfo(h, &csbiInfo);  
-    wOldColorAttrs = csbiInfo.wAttributes;  
+	initCO();
     
     scanf("%s", F[(int)Face::F]);
     scanf("%s", F[(int)Face::B]);
