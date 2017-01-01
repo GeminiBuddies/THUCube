@@ -27,7 +27,7 @@ void Optimize(vector<Op> &OpStack){
 			if(st.back().second.first==3) st.back().second.first=-1;
 			if(st.back().second.second==3) st.back().second.second=-1;
 			if(st.back().second.first==-3) st.back().second.first=1;
-			if(st.back().second.second==-3) st.back().second.second=-1;
+			if(st.back().second.second==-3) st.back().second.second=1;
 			if(!st.back().second.first && !st.back().second.second) st.pop_back();
         }
     }
